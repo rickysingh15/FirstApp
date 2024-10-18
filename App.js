@@ -1,6 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import {useState} from 'react';
-import { StyleSheet, Text, View , TextInput, Button} from 'react-native';
+import { StyleSheet, Text, View , TextInput, Button, ScrollView, FlatList} from 'react-native';
+
+import GoalItem from './components/GoalItem';
 
 export default function App() 
 {
@@ -13,13 +15,18 @@ export default function App()
     textInputHandler(receivedText);
   }
 
-  function addGoalHandler() {
-    console.log(textInputString);
-    setCourseGoals((currentCourseGoals) => [...currentCourseGoals, textInputString]);   
-    
-    textInputHandler('');
+  /**
+   * Adds the current input text to the courseGoals state array.
+   * Clears the input text.
+   */
+  function addGoalHandler() 
+  {
+    setCourseGoals((currentCourseGoals) => [
+      ...currentCourseGoals,
+       {text: textInputString, id: Math.random().toString()},
+      ]);   
   }
-
+  
   return (
     <View style={styles.appContainer}>
 
@@ -27,11 +34,21 @@ export default function App()
           <TextInput style={styles.textInput} placeholder="Your course goal!" onChangeText={goalInputHandler}/>
           <Button title="Add Goal" onPress={addGoalHandler}/>
       </View>
-      <View style={styles.goalsContainer}>
-        {courseGoals.map((goal) => <Text key={goal}>{goal}</Text>)}
-      </View>
 
-    </View>
+      <View style={styles.goalsContainer}>
+        <FlatList 
+          data={courseGoals}
+          renderItem={(itemData)=>{
+
+            return (
+              <GoalItem text={itemData.item.text}/>
+            );
+          }}
+          keyExtractor={(item, index)=>{return item.id}}
+          alwaysBounceVertical={false}
+          />  
+      </View>
+    </View> 
   );
 }
 
@@ -60,5 +77,16 @@ const styles = StyleSheet.create({
     marginTop: 16,
     paddingTop: 16,
     flex: 5
+  },
+
+  listItem: {
+    margin: 8,
+    padding: 10,
+    borderRadius: 6,
+    backgroundColor:'#5e0acc'
+  },
+
+  goalText:{
+    color: 'white'
   }
 });
