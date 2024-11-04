@@ -51,35 +51,37 @@ export default function App()
   } 
   
   return (
-    <View style={styles.appContainer}>
+    <>
+      <StatusBar style="light" />
+      <View style={styles.appContainer}>
+        <View style={styles.addNewButtonContainer}>
+          <Button title='Add New Goal'
+            color="#5A5A5A"
+            onPress={startAddGoalHandler}/>
+        </View>
 
-      <View style={styles.addNewButtonContainer}>
-        <Button title='Add New Goal'
-          color="#5A5A5A"
-          onPress={startAddGoalHandler}/>
-      </View>
+        <View style={styles.inputContainer}>
+            {modalIsVisible && <GoalInput 
+                                  visible={modalIsVisible} 
+                                  addGoal={addGoalHandler} 
+                                  cancelStateVar={cancelAddGoalHandler}/>}
+        </View>
 
-      <View style={styles.inputContainer}>
-          {modalIsVisible && <GoalInput 
-                                visible={modalIsVisible} 
-                                addGoal={addGoalHandler} 
-                                cancelStateVar={cancelAddGoalHandler}/>}
-      </View>
+        <View style={styles.goalsContainer}>
+          <FlatList 
+            data={courseGoals}
+            renderItem={(itemData)=>{
 
-      <View style={styles.goalsContainer}>
-        <FlatList 
-          data={courseGoals}
-          renderItem={(itemData)=>{
-
-            return (
-              <GoalItem id = {itemData.item.id} text={itemData.item.text} onDelete={deleteGoalHandler}/>
-            );
-          }}
-          keyExtractor={(item, index)=>{return item.id}}
-          alwaysBounceVertical={false}
-          />  
-      </View>
-    </View> 
+              return (
+                <GoalItem id = {itemData.item.id} text={itemData.item.text} onDelete={deleteGoalHandler}/>
+              );
+            }}
+            keyExtractor={(item, index)=>{return item.id}}
+            alwaysBounceVertical={false}
+            />  
+        </View>
+      </View> 
+    </>
   );
 }
 
